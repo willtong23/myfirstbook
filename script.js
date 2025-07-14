@@ -25,10 +25,28 @@ function renderBook(data, format) {
         data.chapters.forEach(chapter => {
             const div = document.createElement('div');
             div.classList.add('chapter');
-            div.innerHTML = `<h2 class="expandable">${chapter.title}</h2><div class="hidden">${chapter.content}</div>`;
-            div.querySelector('.expandable').addEventListener('click', () => {
-                div.querySelector('.hidden').classList.toggle('hidden');
+
+            // Create elements separately to avoid querySelector issues
+            const titleElement = document.createElement('h2');
+            titleElement.className = 'expandable';
+            titleElement.textContent = chapter.title;
+
+            const contentElement = document.createElement('div');
+            contentElement.className = 'hidden';
+            contentElement.innerHTML = chapter.content;
+
+            // Add click handler with null check
+            titleElement.addEventListener('click', () => {
+                if (contentElement && contentElement.classList) {
+                    contentElement.classList.toggle('hidden');
+                    console.log('Toggle successful for:', chapter.title);
+                } else {
+                    console.error('Content element not found or classList missing for:', chapter.title);
+                }
             });
+
+            div.appendChild(titleElement);
+            div.appendChild(contentElement);
             content.appendChild(div);
         });
     } else if (format === 'text') {
@@ -41,13 +59,13 @@ function renderBook(data, format) {
     } else if (format === 'mindmap') {
         // Mind Map View (using jsMind) - Show actual book structure
         content.innerHTML = '<div id="jsmind_container" style="width: 100%; height: 600px;"></div>';
-        
+
         // Use actual book data
         const mind = {
             meta: { name: data.title, author: 'Interactive Book', version: '1.0' },
             format: 'node_tree',
-            data: { 
-                id: 'root', 
+            data: {
+                id: 'root',
                 topic: data.title,
                 children: data.chapters.slice(0, 8).map((chapter, index) => ({
                     id: 'chapter_' + index,
@@ -56,28 +74,36 @@ function renderBook(data, format) {
                 }))
             }
         };
-        
-        const options = { 
-            container: 'jsmind_container', 
-            theme: 'primary', 
+
+        const options = {
+            container: 'jsmind_container',
+            theme: 'primary',
             editable: false,
             view: { hmargin: 120, vmargin: 80 }
         };
-        
+
         const jm = new jsMind(options);
         jm.show(mind);
     }
 }
 
 // Add Expand All function (add button in index.html: <button id="expand-all">Expand All</button>)
-document.getElementById('expand-all').addEventListener('click', () => {
-    document.querySelectorAll('.hidden').forEach(el => el.classList.remove('hidden'));
-});
+const expandAllBtn = document.getElementById('expand-all');
+if (expandAllBtn) {
+    expandAllBtn.addEventListener('click', () => {
+        document.querySelectorAll('.hidden').forEach(el => {
+            if (el && el.classList) el.classList.remove('hidden');
+        });
+    });
+}
 
 // Add search input in index.html: <input id="search" type="text" placeholder="Search chapters">
-document.getElementById('search').addEventListener('input', (e) => {
-    const term = e.target.value.toLowerCase();
-    document.querySelectorAll('.chapter').forEach(ch => {
-        ch.style.display = ch.textContent.toLowerCase().includes(term) ? 'block' : 'none';
+const searchInput = document.getElementById('search');
+if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        document.querySelectorAll('.chapter').forEach(ch => {
+            ch.style.display = ch.textContent.toLowerCase().includes(term) ? 'block' : 'none';
+        });
     });
-});
+}
