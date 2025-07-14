@@ -31,24 +31,56 @@ header {
     display: none !important; 
 }
 
-/* Mind map hover effects */
+/* Mind map styling - force black text */
 .jsmind-node { 
-    position: relative; 
+    position: relative;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+/* Force black text on all mind map elements */
+#jsmind_container,
+#jsmind_container *,
+.jsmind-node, 
+.jsmind-node *, 
+jmnode,
+jmnode *,
+.jmnode,
+.jmnode *,
+.theme-primary jmnode,
+.theme-primary .jmnode,
+jmnode[style],
+.jsmind-inner,
+.jsmind-inner * {
+    color: #000000 !important;
+    font-weight: 500 !important;
+}
+
+/* Override any inline styles */
+[style*="color"] {
+    color: #000000 !important;
 }
 
 .jsmind-node:hover {
-    background: yellow !important;
+    background: #f8f9fa !important;
+    border: 2px solid #007bff !important;
     cursor: pointer;
     transform: scale(1.05);
     transition: all 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .jsmind-node:hover::after { 
     content: attr(data-summary); 
     position: absolute; 
-    background: white; 
-    border: 1px solid black; 
-    padding: 5px; 
+    background: #ffffff; 
+    border: 1px solid #dee2e6; 
+    border-radius: 4px;
+    padding: 8px 12px; 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    font-size: 12px;
+    color: #495057;
+    max-width: 200px;
     z-index: 10; 
 }
 

@@ -87,6 +87,15 @@
 
          const jm = new jsMind(options);
          jm.show(mind);
+        
+        // Force black text color after rendering
+        setTimeout(() => {
+            const nodes = document.querySelectorAll('#jsmind_container jmnode');
+            nodes.forEach(node => {
+                node.style.color = '#000000';
+                node.style.setProperty('color', '#000000', 'important');
+            });
+        }, 100);
 
          // Alternative approach: Use DOM click events directly
          jm.disable_edit(); // Disable edit for now
@@ -139,13 +148,13 @@
 
  // New function: Get chapter color based on content type
  function getChapterColor(title) {
-     if (title.includes('創造') || title.includes('創新')) return '#FF9999'; // Red for Creativity
-     if (title.includes('批判') || title.includes('思維')) return '#99FF99'; // Green for Critical Thinking  
-     if (title.includes('同理') || title.includes('情感')) return '#9999FF'; // Blue for Empathy
-     if (title.includes('支柱')) return '#FFCC99'; // Orange for Pillars
-     if (title.includes('實踐') || title.includes('策略')) return '#99FFFF'; // Cyan for Practice
-     if (title.includes('引言') || title.includes('前言')) return '#FFFF99'; // Yellow for Introduction
-     return '#E6E6E6'; // Default light gray
+     if (title.includes('創造') || title.includes('創新')) return '#e8f4f8'; // Soft blue-gray for Creativity
+     if (title.includes('批判') || title.includes('思維')) return '#f0f9f0'; // Soft mint for Critical Thinking  
+     if (title.includes('同理') || title.includes('情感')) return '#f8f0ff'; // Soft lavender for Empathy
+     if (title.includes('支柱')) return '#fff8f0'; // Soft peach for Pillars
+     if (title.includes('實踐') || title.includes('策略')) return '#f0f8ff'; // Soft sky blue for Practice
+     if (title.includes('引言') || title.includes('前言')) return '#fffef0'; // Soft cream for Introduction
+     return '#f8f9fa'; // Clean light gray default
  }
 
  // New function: Show content in modal (add to index.html: <div id="modal" style="display:none; position:fixed; top:20%; left:20%; width:60%; height:60%; background:white; border:1px solid black; padding:20px; overflow:auto;"><button onclick="document.getElementById('modal').style.display='none'">Close</button><div id="modal-content"></div></div>)
