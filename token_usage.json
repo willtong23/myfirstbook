@@ -1,0 +1,60 @@
+{
+  "sessions": [],
+  "current_session": {
+    "start_time": "2025-07-13T23:13:10.262531",
+    "model": "claude-3-5-sonnet",
+    "interactions": [
+      {
+        "timestamp": "2025-07-13T23:13:10.262552",
+        "type": "file_creation",
+        "input_tokens": 7,
+        "output_tokens": 15,
+        "user_input_preview": "create interactive book project",
+        "assistant_output_preview": "Created index.html, script.js, styles.css with basic structure"
+      },
+      {
+        "timestamp": "2025-07-13T23:13:10.262558",
+        "type": "content_creation",
+        "input_tokens": 6,
+        "output_tokens": 13,
+        "user_input_preview": "add Chinese book content",
+        "assistant_output_preview": "Updated data.json with complete Chinese book structure"
+      },
+      {
+        "timestamp": "2025-07-13T23:13:10.262562",
+        "type": "feature_implementation",
+        "input_tokens": 5,
+        "output_tokens": 11,
+        "user_input_preview": "implement mind map view",
+        "assistant_output_preview": "Added jsMind library and mind map functionality"
+      },
+      {
+        "timestamp": "2025-07-13T23:13:10.262567",
+        "type": "debugging",
+        "input_tokens": 5,
+        "output_tokens": 11,
+        "user_input_preview": "debug expand/collapse",
+        "assistant_output_preview": "Fixed CSS and JavaScript for chapter toggling"
+      },
+      {
+        "timestamp": "2025-07-13T23:13:10.262571",
+        "type": "feature_implementation",
+        "input_tokens": 6,
+        "output_tokens": 9,
+        "user_input_preview": "add search functionality",
+        "assistant_output_preview": "Implemented real-time chapter search"
+      }
+    ],
+    "total_input_tokens": 29,
+    "total_output_tokens": 59,
+    "estimated_cost": 0.0009720000000000001
+  },
+  "project_summary": {
+    "total_sessions": 1,
+    "total_input_tokens": 29,
+    "total_output_tokens": 59,
+    "total_tokens": 88,
+    "estimated_total_cost": 0.001,
+    "average_cost_per_session": 0.001
+  }
+}

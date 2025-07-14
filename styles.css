@@ -31,4 +31,25 @@ header {
     display: none !important; 
 }
 
+/* Mind map hover effects */
+.jsmind-node { 
+    position: relative; 
+}
+
+.jsmind-node:hover {
+    background: yellow !important;
+    cursor: pointer;
+    transform: scale(1.05);
+    transition: all 0.2s ease;
+}
+
+.jsmind-node:hover::after { 
+    content: attr(data-summary); 
+    position: absolute; 
+    background: white; 
+    border: 1px solid black; 
+    padding: 5px; 
+    z-index: 10; 
+}
+
 /* Figma-ready: Add custom styles here from Figma exports */
