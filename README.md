@@ -1,4 +1,5 @@
-# Interactive Book Project
+# My First Book: 在演算法世界，播下人性種子
+Interactive Book about Education in the AI Era
 
 ## How to Run
 - Open index.html in a browser (e.g., Chrome).
