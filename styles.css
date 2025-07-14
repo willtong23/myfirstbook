@@ -1,0 +1,34 @@
+body { 
+    font-family: Arial, sans-serif; 
+    margin: 20px; 
+}
+
+header { 
+    text-align: center; 
+}
+
+#book-content { 
+    max-width: 800px; 
+    margin: auto; 
+}
+
+.chapter { 
+    background: #f0f0f0; 
+    padding: 10px; 
+    margin: 10px 0; 
+}
+
+.chapter .expandable { 
+    cursor: pointer;
+    color: blue; 
+} /* For clickable sections */
+
+.chapter > div {
+    margin-top: 10px;
+}
+
+.hidden { 
+    display: none !important; 
+}
+
+/* Figma-ready: Add custom styles here from Figma exports */
