@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>24 Character Strengths Interactive Display</title>
+    <style>
+        /* CSS Variables for easy customization */
+        :root {
+            --primary-bg-color: #f8f8f8; /* Overall page background */
+            --card-default-bg: #ffffff; /* Default card background */
+            --card-hover-bg: #212529; /* Hover card background (dark blue/indigo) */
+            --card-border-color: #e0e0e0; /* Default card border */
+            --card-shadow-default: 0px 4px 10px rgba(0, 0, 0, 0.05);
+            --card-shadow-hover: 0px 10px 20px rgba(0, 0, 0, 0.4);
+
+            --text-dark: #333333; /* Dark text color */
+            --text-light: #ffffff; /* Light text color for hover state */
+            --virtue-color: #007bff; /* Accent color for Virtue */
+            --learn-more-text-color: #ffffff; /* Learn More button text color on dark background */
+            --learn-more-border-color: #ffffff; /* Learn More button border color */
+            --learn-more-hover-bg: #ffffff; /* Learn More button background on hover */
+            --learn-more-hover-text: var(--card-hover-bg); /* Learn More button text color on hover */
+
+            --font-family-primary: 'Arial', sans-serif; /* You can change this to your preferred font */
+            --font-size-name: 1.2em;
+            --font-size-virtue: 0.9em;
+            --font-size-description: 0.95em;
+            --font-size-learn-more: 0.85em;
+
+            --card-border-radius: 8px;
+            --grid-gap: 24px; /* Gap between cards */
+            --card-padding: 20px; /* Padding inside the card */
+        }
+
+        /* Basic Reset & Body Styles */
+        body {
+            font-family: var(--font-family-primary);
+            margin: 0;
+            padding: 20px; /* Some padding around the entire grid */
+            background-color: var(--primary-bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align content to the top */
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            box-sizing: border-box; /* Include padding in element's total width and height */
+        }
+
+        /* Container for the entire grid */
+        .cs-grid-container {
+            display: grid;
+            gap: var(--grid-gap);
+            width: 100%;
+            max-width: 1200px; /* Max width for the grid on large screens */
+            margin: auto; /* Center the grid container */
+            padding: 0; /* No specific padding on the container itself, handled by body */
+        }
+
+        /* Individual CS Card Styling */
+        .cs-card {
+            background-color: var(--card-default-bg);
+            border: 1px solid var(--card-border-color);
+            border-radius: var(--card-border-radius);
+            box-shadow: var(--card-shadow-default);
+            padding: var(--card-padding);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            position: relative; /* For managing description height */
+            overflow: hidden; /* Hide overflowing description initially */
+
+            /* Smooth transitions for all changing properties */
+            transition:
+                background-color 0.3s ease-in-out,
+                color 0.3s ease-in-out,
+                box-shadow 0.3s ease-in-out,
+                transform 0.3s ease-in-out,
+                border-color 0.3s ease-in-out;
+        }
+
+        /* Card elements styling */
+        .cs-card-icon {
+            width: 80px; /* Adjust icon size as needed */
+            height: 80px; /* Ensure square aspect ratio */
+            object-fit: contain; /* Ensure image fits without distortion */
+            margin-bottom: 15px;
+            filter: grayscale(0%) brightness(1); /* Default filter for icon */
+            transition: filter 0.3s ease-in-out;
+        }
+
+        .cs-card-name {
+            font-size: var(--font-size-name);
+            font-weight: bold;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .cs-card-virtue {
+            font-size: var(--font-size-virtue);
+            color: var(--virtue-color);
+            text-transform: uppercase;
+            font-weight: normal;
+            transition: color 0.3s ease-in-out;
+        }
+
+        /* Hover State for the Card */
+        .cs-card:hover {
+            background-color: var(--card-hover-bg);
+            border-color: transparent; /* Remove border on hover for clean look */
+            box-shadow: var(--card-shadow-hover);
+            transform: translateY(-5px) scale(1.02); /* Slight lift and scale */
+        }
+
+        /* Text and Icon color change on hover */
+        .cs-card:hover .cs-card-name,
+        .cs-card:hover .cs-card-virtue {
+            color: var(--text-light);
+        }
+
+        .cs-card:hover .cs-card-icon {
+            /* This filter attempts to make most JPG/PNG icons appear white/light on dark background */
+            /* You might need to adjust 'brightness' based on your specific icons. */
+            filter: grayscale(100%) brightness(500%) contrast(100%);
+        }
+
+        /* Description and Learn More styles */
+        .cs-card-description-wrapper {
+            margin-top: 15px;
+            max-height: 0; /* Hidden by default, for transition */
+            opacity: 0; /* Hidden by default, for transition */
+            overflow: hidden; /* Ensure content is hidden when max-height is 0 */
+            transition: max-height 0.4s ease-in-out, opacity 0.3s ease-in-out, padding 0.3s ease-in-out;
+            color: var(--text-light);
+            text-align: left; /* Align description text left */
+            width: 100%; /* Take full width of card content area */
+            box-sizing: border-box; /* Include padding in width */
+            padding: 0 10px; /* Inner padding for description text */
+        }
+
+        .cs-card:hover .cs-card-description-wrapper {
+            max-height: 250px; /* Sufficient height to reveal typical description + button */
+            opacity: 1;
+            padding-bottom: 10px; /* Add some padding at the bottom when visible */
+        }
+
+        .cs-card-description {
+            font-size: var(--font-size-description);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .cs-card-learn-more {
+            display: inline-block; /* Make it behave like a block for styling */
+            font-size: var(--font-size-learn-more);
+            color: var(--learn-more-text-color);
+            text-decoration: none;
+            border: 1px solid var(--learn-more-border-color);
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+        }
+
+        .cs-card-learn-more:hover {
+            background-color: var(--learn-more-hover-bg);
+            color: var(--learn-more-hover-text); /* Text color becomes dark on hover */
+        }
+
+        /* Responsive Grid Layouts */
+
+        /* Default: 4 columns for large screens */
+        @media (min-width: 1024px) {
+            .cs-grid-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* Medium screens: 3 columns */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .cs-grid-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Small screens: 2 columns */
+        @media (min-width: 481px) and (max-width: 767px) {
+            .cs-grid-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        /* Very small screens (e.g. narrow phones): 1 column */
+        @media (max-width: 480px) {
+            .cs-grid-container {
+                grid-template-columns: repeat(1, 1fr);
+            }
+            .cs-card {
+                 max-width: 300px; /* Constrain card width on very small screens for better appearance */
+                 margin-left: auto;
+                 margin-right: auto;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="cs-grid-container" id="csGrid">
+        </div>
+
+    <script>
+        // --- DATA SECTION ---
+        // You can easily modify this JSON array to change, add, or remove CS items.
+        // IMPORTANT: Ensure your imagePath values are correct relative to your HTML file.
+        // For example, if your images are in a folder named 'images' next to your HTML, use "images/creativity.jpg".
+        const characterStrengthsData = [
+            { "id": "cs01", "name": "Creativity", "virtue": "Wisdom", "description": "Thinking of new and productive ways to conceptualize and do things.", "imagePath": "images/creativity.jpg" },
+            { "id": "cs02", "name": "Curiosity", "virtue": "Wisdom", "description": "Taking an interest in ongoing experience for its own sake.", "imagePath": "images/curiosity.jpg" },
+            { "id": "cs03", "name": "Judgment", "virtue": "Wisdom", "description": "Thinking things through and examining all sides.", "imagePath": "images/judgment.jpg" },
+            { "id": "cs04", "name": "Love of Learning", "virtue": "Wisdom", "description": "Mastering new skills, topics, and bodies of knowledge.", "imagePath": "images/love-of-learning.jpg" },
+            { "id": "cs05", "name": "Perspective", "virtue": "Wisdom", "description": "Being able to provide wise counsel to others.", "imagePath": "images/perspective.jpg" },
+            { "id": "cs06", "name": "Bravery", "virtue": "Courage", "description": "Not shrinking from threat, challenge, difficulty, or pain.", "imagePath": "images/bravery.jpg" },
+            { "id": "cs07", "name": "Perseverance", "virtue": "Courage", "description": "Finishing what one starts. Persisting in a course of action.", "imagePath": "images/perseverance.jpg" },
+            { "id": "cs08", "name": "Honesty", "virtue": "Courage", "description": "Speaking the truth and presenting oneself in a genuine way.", "imagePath": "images/honesty.jpg" },
+            { "id": "cs09", "name": "Zest", "virtue": "Courage", "description": "Approaching life with excitement and energy.", "imagePath": "images/zest.jpg" },
+            { "id": "cs10", "name": "Love", "virtue": "Humanity", "description": "Valuing close relations with others.", "imagePath": "images/love.jpg" },
+            { "id": "cs11", "name": "Kindness", "virtue": "Humanity", "description": "Doing good deeds and favors for others, helping them.", "imagePath": "images/kindness.jpg" },
+            { "id": "cs12", "name": "Social Intelligence", "virtue": "Humanity", "description": "Being aware of the motives and feelings of other people and oneself.", "imagePath": "images/social-intelligence.jpg" },
+            { "id": "cs13", "name": "Teamwork", "virtue": "Justice", "description": "Working well as a member of a group or team.", "imagePath": "images/teamwork.jpg" },
+            { "id": "cs14", "name": "Fairness", "virtue": "Justice", "description": "Treating all people fairly, not letting personal feelings bias decisions.", "imagePath": "images/fairness.jpg" },
+            { "id": "cs15", "name": "Leadership", "virtue": "Justice", "description": "Organizing group activities and seeing them through.", "imagePath": "images/leadership.jpg" },
+            { "id": "cs16", "name": "Forgiveness", "virtue": "Temperance", "description": "Forgiving those who have done wrong.", "imagePath": "images/forgiveness.jpg" },
+            { "id": "cs17", "name": "Humility", "virtue": "Temperance", "description": "Not seeking the spotlight or considering oneself more special than one is.", "imagePath": "images/humility.jpg" },
+            { "id": "cs18", "name": "Prudence", "virtue": "Temperance", "description": "Being careful about one's choices and not taking undue risks.", "imagePath": "images/prudence.jpg" },
+            { "id": "cs19", "name": "Self-Regulation", "virtue": "Temperance", "description": "Regulating what one feels and does.", "imagePath": "images/self-regulation.jpg" },
+            { "id": "cs20", "name": "Appreciation of Beauty & Excellence", "virtue": "Transcendence", "description": "Noticing and appreciating beauty, excellence, and skilled performance.", "imagePath": "images/appreciation-of-beauty---excellence.jpg" },
+            { "id": "cs21", "name": "Gratitude", "virtue": "Transcendence", "description": "Being aware of and thankful for the good things that happen.", "imagePath": "images/gratitude.jpg" },
+            { "id": "cs22", "name": "Hope", "virtue": "Transcendence", "description": "Expecting the best and working to achieve it.", "imagePath": "images/hope.jpg" },
+            { "id": "cs23", "name": "Humour", "virtue": "Transcendence", "description": "Approaching life playfully and making others laugh.", "imagePath": "images/humour.jpg" },
+            { "id": "cs24", "name": "Sense of Meaning", "virtue": "Transcendence", "description": "Having coherent beliefs about the higher purpose and meaning of the universe.", "imagePath": "images/sense-of-meaning.jpg" }
+        ];
+
+        // --- SCRIPT SECTION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const csGrid = document.getElementById('csGrid');
+
+            characterStrengthsData.forEach(cs => {
+                const card = document.createElement('div');
+                card.classList.add('cs-card');
+
+                // Icon
+                const icon = document.createElement('img');
+                icon.classList.add('cs-card-icon');
+                icon.src = cs.imagePath; // Use the imagePath from the data
+                icon.alt = cs.name + ' Icon';
+                
+                // Add error handling for missing images
+                icon.onerror = function() {
+                    this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiNmM2Y0ZjYiLz4KPHN2ZyB4PSIyMCIgeT0iMjAiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjOTk5Ij4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDE1Ljc0TDEyIDIyTDEwLjkxIDE1Ljc0TDQgOUwxMC45MSA4LjI2TDEyIDJaIiBmaWxsPSJjdXJyZW50Q29sb3IiLz4KPC9zdmc+KPC9zdmc+';
+                };
+                
+                card.appendChild(icon);
+
+                // Name
+                const name = document.createElement('h3');
+                name.classList.add('cs-card-name');
+                name.textContent = cs.name;
+                card.appendChild(name);
+
+                // Virtue
+                const virtue = document.createElement('p');
+                virtue.classList.add('cs-card-virtue');
+                virtue.textContent = cs.virtue;
+                card.appendChild(virtue);
+
+                // Description Wrapper (hidden by default)
+                const descriptionWrapper = document.createElement('div');
+                descriptionWrapper.classList.add('cs-card-description-wrapper');
+
+                const description = document.createElement('p');
+                description.classList.add('cs-card-description');
+                description.textContent = cs.description;
+                descriptionWrapper.appendChild(description);
+
+                const learnMore = document.createElement('a');
+                learnMore.classList.add('cs-card-learn-more');
+                // You can change this href to a specific page or modal link
+                learnMore.href = `#${cs.id}`; 
+                learnMore.textContent = "LEARN MORE";
+                descriptionWrapper.appendChild(learnMore);
+
+                card.appendChild(descriptionWrapper);
+
+                csGrid.appendChild(card);
+            });
+        });
+    </script>
+
+</body>
+</html>
