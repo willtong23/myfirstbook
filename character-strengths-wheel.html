@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Strengths Wheel - Silvermine Bay School</title>
+    <style>
+        :root {
+            --primary-orange: #ff6b35;
+            --secondary-orange: #f7931e;
+            --tertiary-orange: #ffa500;
+            --gold-accent: #ffd700;
+            --blue-accent: #1e40af;
+            --green-accent: #16a085;
+            --text-dark: #2c3e50;
+            --text-light: #ffffff;
+            --shadow-light: rgba(0, 0, 0, 0.1);
+            --shadow-medium: rgba(0, 0, 0, 0.2);
+            --shadow-heavy: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(45deg, #FF6B35, #FF8E53, #FFB366, #FFA500, #FFD700);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 95vmin;
+            height: 95vmin;
+            max-width: 900px;
+            max-height: 900px;
+            margin: auto;
+        }
+
+        .center-hub {
+            position: absolute;
+            top: calc(50% - 225px);
+            left: calc(50% - 225px);
+            width: 450px;
+            height: 450px;
+            background: transparent;
+            border-radius: 50%;
+            display: block;
+            box-shadow: 0 15px 50px var(--shadow-heavy);
+            border: 10px solid var(--gold-accent);
+            z-index: 10;
+        }
+
+        .school-logo {
+            width: 80px;
+            height: 80px;
+            background: var(--text-light);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 16px var(--shadow-medium);
+            border: 2px solid var(--blue-accent);
+        }
+
+        .school-name {
+            color: var(--text-light);
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .virtue-petal {
+            position: absolute;
+            width: 140px;
+            height: 70px;
+            border-radius: 70px 70px 0 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 18px;
+            color: var(--text-light);
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+            transform-origin: center bottom;
+            box-shadow: 0 6px 20px var(--shadow-medium);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .virtue-petal:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 24px var(--shadow-heavy);
+        }
+
+        .virtue-wisdom { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .virtue-courage { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .virtue-humanity { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+        .virtue-justice { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .virtue-temperance { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+        .virtue-transcendence { background: linear-gradient(135deg, #1abc9c, #16a085); }
+
+        .cs-icon {
+            position: absolute;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: var(--text-light);
+            box-shadow: 0 6px 20px var(--shadow-medium);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 4px solid var(--gold-accent);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform-origin: center;
+        }
+
+        .cs-icon:hover {
+            transform: scale(1.15);
+            box-shadow: 0 8px 24px var(--shadow-heavy);
+            border-color: var(--text-light);
+            z-index: 5;
+        }
+
+        .cs-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .cs-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--text-light);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .cs-icon:hover .cs-label {
+            opacity: 1;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 48%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            width: 400px;
+            height: 400px;
+            background: var(--text-light);
+            border-radius: 50%;
+            padding: 40px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 20px 60px var(--shadow-heavy);
+            border: 6px solid var(--gold-accent);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .modal-overlay.active {
+            display: block;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50%;
+        }
+
+        .modal-close:hover {
+            color: var(--text-dark);
+        }
+
+        .modal-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px;
+            display: block;
+            border: 3px solid var(--gold-accent);
+            box-shadow: 0 6px 20px var(--shadow-medium);
+        }
+
+        .modal-title {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: var(--text-dark);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .modal-virtue {
+            font-size: 0.9rem;
+            color: var(--secondary-orange);
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .modal-description {
+            color: #666;
+            line-height: 1.4;
+            font-size: 0.95rem;
+            text-align: center;
+            margin: 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .wheel-container {
+                width: 95vmin;
+                height: 95vmin;
+            }
+            
+            .center-hub {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .school-logo {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .virtue-petal {
+                width: 100px;
+                height: 50px;
+                font-size: 12px;
+            }
+            
+            .cs-icon {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .modal-content {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cs-icon {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .virtue-petal {
+                width: 80px;
+                height: 40px;
+                font-size: 10px;
+            }
+        }
+
+        /* Animation for entrance */
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Pulse animation for center */
+        .center-hub {
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.02); }
+        }
+    </style>
+</head>
+<body>
+    <div class="wheel-container fade-in">
+
+
+        <!-- Character Strength Icons (will be positioned by JavaScript) -->
+        <div id="character-strengths-container"></div>
+    </div>
+
+    <!-- Center Display -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <img class="modal-image" id="modal-image" src="" alt="">
+            <h2 class="modal-title" id="modal-title"></h2>
+            <div class="modal-virtue" id="modal-virtue"></div>
+            <p class="modal-description" id="modal-description"></p>
+        </div>
+    </div>
+
+    <script>
+        // Character Strengths Data
+        const characterStrengths = [
+            { "id": "cs01", "name": "Creativity", "virtue": "Wisdom", "description": "Thinking of new and productive ways to conceptualize and do things.", "imagePath": "images/creativity.jpg" },
+            { "id": "cs02", "name": "Curiosity", "virtue": "Wisdom", "description": "Taking an interest in ongoing experience for its own sake.", "imagePath": "images/curiosity.jpg" },
+            { "id": "cs03", "name": "Judgment", "virtue": "Wisdom", "description": "Thinking things through and examining all sides.", "imagePath": "images/judgment.jpg" },
+            { "id": "cs04", "name": "Love of Learning", "virtue": "Wisdom", "description": "Mastering new skills, topics, and bodies of knowledge.", "imagePath": "images/love-of-learning.jpg" },
+            { "id": "cs05", "name": "Perspective", "virtue": "Wisdom", "description": "Being able to provide wise counsel to others.", "imagePath": "images/perspective.jpg" },
+            { "id": "cs06", "name": "Bravery", "virtue": "Courage", "description": "Not shrinking from threat, challenge, difficulty, or pain.", "imagePath": "images/bravery.jpg" },
+            { "id": "cs07", "name": "Perseverance", "virtue": "Courage", "description": "Finishing what one starts. Persisting in a course of action.", "imagePath": "images/perseverance.jpg" },
+            { "id": "cs08", "name": "Honesty", "virtue": "Courage", "description": "Speaking the truth and presenting oneself in a genuine way.", "imagePath": "images/honesty.jpg" },
+            { "id": "cs09", "name": "Zest", "virtue": "Courage", "description": "Approaching life with excitement and energy.", "imagePath": "images/zest.jpg" },
+            { "id": "cs10", "name": "Love", "virtue": "Humanity", "description": "Valuing close relations with others.", "imagePath": "images/love.jpg" },
+            { "id": "cs11", "name": "Kindness", "virtue": "Humanity", "description": "Doing good deeds and favors for others, helping them.", "imagePath": "images/kindness.jpg" },
+            { "id": "cs12", "name": "Social Intelligence", "virtue": "Humanity", "description": "Being aware of the motives and feelings of other people and oneself.", "imagePath": "images/social-intelligence.jpg" },
+            { "id": "cs13", "name": "Teamwork", "virtue": "Justice", "description": "Working well as a member of a group or team.", "imagePath": "images/teamwork.jpg" },
+            { "id": "cs14", "name": "Fairness", "virtue": "Justice", "description": "Treating all people fairly, not letting personal feelings bias decisions.", "imagePath": "images/fairness.jpg" },
+            { "id": "cs15", "name": "Leadership", "virtue": "Justice", "description": "Organizing group activities and seeing them through.", "imagePath": "images/leadership.jpg" },
+            { "id": "cs16", "name": "Forgiveness", "virtue": "Temperance", "description": "Forgiving those who have done wrong.", "imagePath": "images/forgiveness.jpg" },
+            { "id": "cs17", "name": "Humility", "virtue": "Temperance", "description": "Not seeking the spotlight or considering oneself more special than one is.", "imagePath": "images/humility.jpg" },
+            { "id": "cs18", "name": "Prudence", "virtue": "Temperance", "description": "Being careful about one's choices and not taking undue risks.", "imagePath": "images/prudence.jpg" },
+            { "id": "cs19", "name": "Self-Regulation", "virtue": "Temperance", "description": "Regulating what one feels and does.", "imagePath": "images/self-regulation.jpg" },
+            { "id": "cs20", "name": "Appreciation of Beauty & Excellence", "virtue": "Transcendence", "description": "Noticing and appreciating beauty, excellence, and skilled performance.", "imagePath": "images/appreciation-of-beauty---excellence.jpg" },
+            { "id": "cs21", "name": "Gratitude", "virtue": "Transcendence", "description": "Being aware of and thankful for the good things that happen.", "imagePath": "images/gratitude.jpg" },
+            { "id": "cs22", "name": "Hope", "virtue": "Transcendence", "description": "Expecting the best and working to achieve it.", "imagePath": "images/hope.jpg" },
+            { "id": "cs23", "name": "Humour", "virtue": "Transcendence", "description": "Approaching life playfully and making others laugh.", "imagePath": "images/humour.jpg" },
+            { "id": "cs24", "name": "Sense of Meaning", "virtue": "Transcendence", "description": "Having coherent beliefs about the higher purpose and meaning of the universe.", "imagePath": "images/sense-of-meaning.jpg" }
+        ];
+
+        // Create character strength icons in circular arrangement
+        function createCharacterStrengthWheel() {
+            const container = document.getElementById('character-strengths-container');
+            const centerX = 50; // percentage
+            const centerY = 50; // percentage
+            const radius = 42; // percentage from center
+            
+            characterStrengths.forEach((cs, index) => {
+                const angle = (index / characterStrengths.length) * 2 * Math.PI - Math.PI / 2; // Start from top
+                const x = centerX + radius * Math.cos(angle);
+                const y = centerY + radius * Math.sin(angle);
+                
+                const iconElement = document.createElement('div');
+                iconElement.className = 'cs-icon';
+                iconElement.style.left = `${x}%`;
+                iconElement.style.top = `${y}%`;
+                iconElement.style.transform = 'translate(-50%, -50%)';
+                iconElement.dataset.csId = cs.id;
+                
+                const img = document.createElement('img');
+                img.src = cs.imagePath;
+                img.alt = cs.name;
+                img.onerror = function() {
+                    // Fallback icon if image fails to load
+                    this.style.display = 'none';
+                    iconElement.innerHTML = '<div style="color: #666; font-size: 12px; text-align: center;">' + cs.name.charAt(0) + '</div>';
+                };
+                
+                const label = document.createElement('div');
+                label.className = 'cs-label';
+                label.textContent = cs.name;
+                
+                iconElement.appendChild(img);
+                iconElement.appendChild(label);
+                container.appendChild(iconElement);
+                
+                // Add hover events
+                iconElement.addEventListener('mouseenter', () => showCenterDisplay(cs));
+                iconElement.addEventListener('mouseleave', () => hideCenterDisplay());
+                
+                // Add entrance animation delay
+                iconElement.style.animationDelay = `${index * 0.05}s`;
+                iconElement.classList.add('fade-in');
+            });
+        }
+
+        // Center display functionality
+        const modal = document.getElementById('modal');
+
+        function showCenterDisplay(cs) {
+            document.getElementById('modal-image').src = cs.imagePath;
+            document.getElementById('modal-image').alt = cs.name;
+            document.getElementById('modal-title').textContent = cs.name;
+            document.getElementById('modal-virtue').textContent = cs.virtue;
+            document.getElementById('modal-description').textContent = cs.description;
+            
+            modal.classList.add('active');
+        }
+
+        function hideCenterDisplay() {
+            modal.classList.remove('active');
+        }
+
+        // Initialize the wheel
+        document.addEventListener('DOMContentLoaded', () => {
+            createCharacterStrengthWheel();
+        });
+    </script>
+</body>
+</html>
