@@ -2,13 +2,23 @@
  // 仲加 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsmind@0.6.0/style/jsmind.css">
 
  document.addEventListener('DOMContentLoaded', () => {
+     console.log('DOM loaded, fetching data...');
      fetch('data.json')
-         .then(response => response.json())
+         .then(response => {
+             console.log('Response received:', response.status);
+             return response.json();
+         })
          .then(data => {
+             console.log('Data loaded:', data);
              window.bookData = data; // 儲 data for toggles
              renderBook(data, 'outline'); // Default view
          })
-         .catch(error => console.error('Error loading data:', error));
+         .catch(error => {
+             console.error('Error loading data:', error);
+             // Add fallback content
+             const content = document.getElementById('book-content');
+             content.innerHTML = '<p>載入中... 或檢查 data.json 檔案</p>';
+         });
 
      document.getElementById('format-select').addEventListener('change', (e) => {
          const format = e.target.value;
@@ -17,7 +27,12 @@
  });
 
  function renderBook(data, format) {
+     console.log('Rendering book with format:', format);
      const content = document.getElementById('book-content');
+     if (!content) {
+         console.error('book-content element not found!');
+         return;
+     }
      content.innerHTML = ''; // Clear
 
      if (format === 'outline') {

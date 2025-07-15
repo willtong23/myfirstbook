@@ -40,8 +40,8 @@
 
 body { 
     font-family: Arial, sans-serif; 
-    margin: 20px; 
-    padding-top: 80px; /* Space for nav tabs */
+    margin: 0; 
+    padding: 80px 20px 20px 20px; /* Top padding for nav tabs, sides for content */
 }
 
 header { 
@@ -50,7 +50,8 @@ header {
 
 #book-content { 
     max-width: 800px; 
-    margin: auto; 
+    margin: 20px auto; 
+    min-height: 200px; /* Ensure content area is visible */
 }
 
 .chapter { 
