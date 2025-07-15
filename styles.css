@@ -1,6 +1,47 @@
+/* Navigation Tabs */
+.nav-tabs {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 25px;
+    padding: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    gap: 5px;
+}
+
+.nav-tab {
+    padding: 10px 20px;
+    border: none;
+    background: transparent;
+    color: #666;
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.nav-tab:hover {
+    background: rgba(0, 123, 255, 0.1);
+    color: #007bff;
+}
+
+.nav-tab.active {
+    background: #007bff;
+    color: white;
+    box-shadow: 0 2px 10px rgba(0, 123, 255, 0.3);
+}
+
 body { 
     font-family: Arial, sans-serif; 
     margin: 20px; 
+    padding-top: 80px; /* Space for nav tabs */
 }
 
 header { 
